@@ -34,9 +34,9 @@ local card_types = {
 function Card:new(pos)
     local _card = setmetatable({}, Card)
     _card.home_pos = pos
-
+    _card.face_img = card_types.card_back
     --_card.position = {x= 0, y=0}
-    _card.type = nil -- or type???
+    _card.type = 0 -- or type???
     _card.is_face_down = true
     _card.is_clickable = true
     _card.is_hovered = false
@@ -44,7 +44,6 @@ function Card:new(pos)
 
 
     _card.position = _card.home_pos
-    print(_card.position.x, _card.position.y)
 
     return _card
 end
@@ -67,12 +66,8 @@ function Card:draw()
     end
 
     if self.is_face_down then
-        love.graphics.draw(SPRITESHEET, card_types.card_back, self.position.x, self.position.y, 0, 1, 1, ox, oy)
+        love.graphics.draw(SPRITESHEET, self.face_img, self.position.x, self.position.y, 0, 1, 1, ox, oy)
         love.graphics.points(self.position.x, self.position.y)
-
-
-       
-
         --love.graphics.rectangle("line", self.hitbox.x, self.hitbox.y, self.hitbox.w, self.hitbox.h)
     else
 
@@ -83,8 +78,12 @@ function Card:reset()
 
 end
 
-function Card:flip_over()
+function Card:set_face(card_idx)
+    self.face_img = card_types[card_idx]
+end
 
+function Card:flip_over()
+    
 end
 
 function Card:check_if_hovered(mx, my)

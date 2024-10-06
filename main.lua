@@ -7,6 +7,19 @@ require("card")
 slots = { 2, 20, 38, 56, 74, 92, 110 }
 
 
+arm = {
+    img=love.graphics.newImage("arm.png"),
+    x=0,
+    y=0,
+    draw=function(self)
+        love.graphics.draw(self.img, 88+10, 105-16)
+    end,
+    update=function (self)
+        
+    end,
+}
+
+
 all_windlines = {}
 cards = {}
 
@@ -40,7 +53,7 @@ for i = 1, 20 do
     table.insert(cards, _c)
 end
 
-print(#cards)
+
 
 local mx, my
 
@@ -87,10 +100,10 @@ function love.draw()
     love.graphics.rectangle("fill", 0, 0, 240, 240)
     love.graphics.pop()
 
-    love.graphics.print(mx .. "," .. my, 0, 0, 0, 0.6, 0.6)
+    --love.graphics.print(mx .. "," .. my, 0, 0, 0, 0.6, 0.6)
 
 
-   print(cards[3].is_hovered)
+
 
     for _, c in ipairs(cards) do
         c:draw()
@@ -98,6 +111,7 @@ function love.draw()
     end
 
     --start of draw_play()
+    arm:draw()
 end
 
 function resize(w, h)                       -- update new translation and scale:
