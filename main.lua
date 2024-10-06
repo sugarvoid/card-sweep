@@ -90,10 +90,11 @@ function love.draw()
     love.graphics.print(mx .. "," .. my, 0, 0, 0, 0.6, 0.6)
 
 
-   
+   print(cards[3].is_hovered)
 
     for _, c in ipairs(cards) do
         c:draw()
+        c:check_if_hovered(mx, my)
     end
 
     --start of draw_play()
