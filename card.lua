@@ -83,7 +83,7 @@ function Card:set_face(card_idx)
 end
 
 function Card:flip_over()
-    
+    self.face_img = card_types.card_red
 end
 
 function Card:check_if_hovered(mx, my)

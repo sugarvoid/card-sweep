@@ -4,18 +4,20 @@ flux = require("lib.flux")
 require("card")
 
 
+player_can_click = true
+
 slots = { 2, 20, 38, 56, 74, 92, 110 }
 
 
 arm = {
-    img=love.graphics.newImage("arm.png"),
-    x=0,
-    y=0,
-    draw=function(self)
-        love.graphics.draw(self.img, 88+10, 105-16)
+    img = love.graphics.newImage("arm.png"),
+    x = 0,
+    y = 0,
+    draw = function(self)
+        love.graphics.draw(self.img, 88 + 10, 105 - 16)
     end,
-    update=function (self)
-        
+    update = function(self)
+
     end,
 }
 
@@ -23,27 +25,27 @@ arm = {
 all_windlines = {}
 cards = {}
 
-local card_pos = {
-    {x = 58, y = 65},
-    {x = 88, y = 65},
-    {x = 118, y = 65},
-    {x = 148, y = 65},
-    {x = 178, y = 65},
-    {x = 58, y = 105},
-    {x = 88, y = 105},
-    {x = 118, y = 105},
-    {x = 148, y = 105},
-    {x = 178, y = 105},
-    {x = 58, y = 145},
-    {x = 88, y = 145},
-    {x = 118, y = 145},
-    {x = 148, y = 145},
-    {x = 178, y = 145},
-    {x = 58, y = 185},
-    {x = 88, y = 185},
-    {x = 118, y = 185},
-    {x = 148, y = 185},
-    {x = 178, y = 185}
+card_pos = {
+    { x = 58,  y = 65 },
+    { x = 88,  y = 65 },
+    { x = 118, y = 65 },
+    { x = 148, y = 65 },
+    { x = 178, y = 65 },
+    { x = 58,  y = 105 },
+    { x = 88,  y = 105 },
+    { x = 118, y = 105 },
+    { x = 148, y = 105 },
+    { x = 178, y = 105 },
+    { x = 58,  y = 145 },
+    { x = 88,  y = 145 },
+    { x = 118, y = 145 },
+    { x = 148, y = 145 },
+    { x = 178, y = 145 },
+    { x = 58,  y = 185 },
+    { x = 88,  y = 185 },
+    { x = 118, y = 185 },
+    { x = 148, y = 185 },
+    { x = 178, y = 185 }
 }
 
 
@@ -71,7 +73,8 @@ function love.load()
 
     -- if your code was optimized for fullHD:
     window = { translateX = 0, translateY = 0, scale = 3, width = 240, height = 240 }
-    width, height = love.graphics.getDimensions(0, 81, 44, 225)
+    --width, height = love.graphics.getDimensions(0, 81, 44, 225)
+    width, height = love.graphics.getDimensions()
     love.window.setMode(width, height, { resizable = true, borderless = false })
     resize(width, height) -- update new translation and scale
 end
@@ -85,6 +88,18 @@ function love.update(dt)
     my = math.floor((love.mouse.getY() - window.translateY) / window.scale + 0.5)
     -- your code here, use mx and my as mouse X and Y positions
     --print(mx, my)
+end
+
+function love.mousepressed(x, y, button, _)
+    if player_can_click then
+        if button == 1 then -- Versions prior to 0.10.0 use the MouseConstant 'l'
+            for _, c in ipairs(cards) do
+                if c.is_hovered then
+                    c:flip_over()
+                end
+            end
+        end
+    end
 end
 
 function love.draw()
@@ -114,7 +129,7 @@ function love.draw()
     arm:draw()
 end
 
-function resize(w, h)                       -- update new translation and scale:
+function resize(w, h)                          -- update new translation and scale:
     local w1, h1 = window.width, window.height -- target rendering resolution
     local scale = math.min(w / w1, h / h1)
     window.translateX, window.translateY, window.scale = (w - w1 * scale) / 2, (h - h1 * scale) / 2, scale
