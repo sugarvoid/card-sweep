@@ -39,8 +39,12 @@ function Card:new(pos)
     _card.type = 0 -- or type???
     _card.is_face_down = true
     _card.is_clickable = true
+    _card.is_on_board = true
     _card.is_hovered = false
     _card.hitbox = { x = _card.home_pos.x - ox, y = _card.home_pos.y - oy, w = CARD_W, h = CARD_H }
+
+    _card.hand = nil
+    _card.is_held = false   
 
 
     _card.position = _card.home_pos
@@ -49,7 +53,9 @@ function Card:new(pos)
 end
 
 function Card:update(dt)
-
+    if self.is_held and self.hand ~= nil then
+        self.position = self.hand.position
+    end
 end
 
 function Card:move()

@@ -2,24 +2,17 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 flux = require("lib.flux")
 
 require("card")
+require("arm")
 
 
 player_can_click = true
 
 slots = { 2, 20, 38, 56, 74, 92, 110 }
 
+arm = Arm:new()
 
-arm = {
-    img = love.graphics.newImage("arm.png"),
-    x = 0,
-    y = 0,
-    draw = function(self)
-        love.graphics.draw(self.img, 88 + 10, 105 - 16)
-    end,
-    update = function(self)
 
-    end,
-}
+
 
 
 all_windlines = {}
@@ -88,6 +81,13 @@ function love.update(dt)
     my = math.floor((love.mouse.getY() - window.translateY) / window.scale + 0.5)
     -- your code here, use mx and my as mouse X and Y positions
     --print(mx, my)
+    --arm:update(dt, mx, my)
+    for _, c in ipairs(cards) do
+        c:update(dt)
+        if c.is_on_board then
+            c:check_if_hovered(mx, my)
+        end
+    end
 end
 
 function love.mousepressed(x, y, button, _)
@@ -95,7 +95,8 @@ function love.mousepressed(x, y, button, _)
         if button == 1 then -- Versions prior to 0.10.0 use the MouseConstant 'l'
             for _, c in ipairs(cards) do
                 if c.is_hovered then
-                    c:flip_over()
+                    arm:grab_card(c)
+                    --c:flip_over()
                 end
             end
         end
@@ -122,7 +123,6 @@ function love.draw()
 
     for _, c in ipairs(cards) do
         c:draw()
-        c:check_if_hovered(mx, my)
     end
 
     --start of draw_play()
