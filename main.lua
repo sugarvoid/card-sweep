@@ -7,11 +7,18 @@ require("arm")
 
 player_can_click = true
 
+selected_card_1 = nil
+selected_card_2 = nil
+
 slots = { 2, 20, 38, 56, 74, 92, 110 }
 
-arm = Arm:new()
+arm_1 = Arm:new()
+arm_2 = Arm:new()
 
+pairs_left = 0
+NEEDED_PAIRS = 20
 
+graveyard = {}
 
 
 
@@ -45,7 +52,9 @@ card_pos = {
 
 for i = 1, 20 do
     local _c = Card:new(card_pos[i])
+    _c:set_face(generate_card_types())
     table.insert(cards, _c)
+    --generate_card_types()
 end
 
 
@@ -81,7 +90,8 @@ function love.update(dt)
     my = math.floor((love.mouse.getY() - window.translateY) / window.scale + 0.5)
     -- your code here, use mx and my as mouse X and Y positions
     --print(mx, my)
-    --arm:update(dt, mx, my)
+    arm_1:update(dt, mx, my)
+    arm_2:update(dt, mx, my)
     for _, c in ipairs(cards) do
         c:update(dt)
         if c.is_on_board then
@@ -94,9 +104,16 @@ function love.mousepressed(x, y, button, _)
     if player_can_click then
         if button == 1 then -- Versions prior to 0.10.0 use the MouseConstant 'l'
             for _, c in ipairs(cards) do
-                if c.is_hovered then
-                    arm:grab_card(c)
-                    --c:flip_over()
+                if c.is_hovered and c.is_clickable then
+                    if selected_card_1 == nil then
+                        selected_card_1 = c
+                        c:show_face()
+                    elseif selected_card_1 ~= nil and selected_card_2 == nil then
+                        selected_card_2 = c
+                        c:show_face()
+                    end
+                    --arm:grab_card(c)
+                    --c:show_face()
                 end
             end
         end
@@ -126,7 +143,15 @@ function love.draw()
     end
 
     --start of draw_play()
-    arm:draw()
+    arm_1:draw()
+    arm_2:draw()
+
+    love.graphics.push("all")
+
+    love.graphics.setColor(love.math.colorFromBytes(33, 33, 35))
+    love.graphics.rectangle("fill", 0, 0, 240, 15)
+    love.graphics.pop()
+
 end
 
 function resize(w, h)                          -- update new translation and scale:
@@ -146,6 +171,8 @@ function love.keypressed(key, scancode, isrepeat)
     end
     if key == "left" then -- move right
         print("left")
+        put_cards_on_board()
+        print(random_float())
     elseif key == "right" then
         print("right")
     end
@@ -157,6 +184,12 @@ function love.keypressed(key, scancode, isrepeat)
     end
     if key == "space" then
         do_action()
+    end
+end
+
+function put_cards_on_board()
+    for _, c in ipairs(cards) do
+        c:slide_to_home_position()
     end
 end
 

@@ -17,8 +17,8 @@ function Arm:new(pos)
 end
 
 function Arm:update(dt, mx, my)
-    self.position.x = mx
-    self.position.y = my
+    --self.position.x = mx
+    --self.position.y = my
 end
 
 function Arm:move()
