@@ -23,7 +23,8 @@ graveyard = {}
 
 
 all_windlines = {}
-cards = {}
+active_cards = {}
+graveyard = {}
 
 card_pos = {
     { x = 58,  y = 65 },
@@ -53,7 +54,7 @@ card_pos = {
 for i = 1, 20 do
     local _c = Card:new(card_pos[i])
     _c:set_face(generate_card_types())
-    table.insert(cards, _c)
+    table.insert(active_cards, _c)
     --generate_card_types()
 end
 
@@ -92,7 +93,7 @@ function love.update(dt)
     --print(mx, my)
     arm_1:update(dt, mx, my)
     arm_2:update(dt, mx, my)
-    for _, c in ipairs(cards) do
+    for _, c in ipairs(active_cards) do
         c:update(dt)
         if c.is_on_board then
             c:check_if_hovered(mx, my)
@@ -103,7 +104,7 @@ end
 function love.mousepressed(x, y, button, _)
     if player_can_click then
         if button == 1 then -- Versions prior to 0.10.0 use the MouseConstant 'l'
-            for _, c in ipairs(cards) do
+            for _, c in ipairs(active_cards) do
                 if c.is_hovered and c.is_clickable then
                     if selected_card_1 == nil then
                         selected_card_1 = c
@@ -113,6 +114,14 @@ function love.mousepressed(x, y, button, _)
                         c:show_face()
                     end
                     --arm:grab_card(c)
+                    --c:show_face()
+                end
+            end
+        end
+        if button == 2 then -- Versions prior to 0.10.0 use the MouseConstant 'l'
+            for _, c in ipairs(active_cards) do
+                if c.is_hovered and c.is_clickable then
+                    arm_1:grab_card(c)
                     --c:show_face()
                 end
             end
@@ -138,7 +147,7 @@ function love.draw()
 
 
 
-    for _, c in ipairs(cards) do
+    for _, c in ipairs(active_cards) do
         c:draw()
     end
 
@@ -188,7 +197,7 @@ function love.keypressed(key, scancode, isrepeat)
 end
 
 function put_cards_on_board()
-    for _, c in ipairs(cards) do
+    for _, c in ipairs(active_cards) do
         c:slide_to_home_position()
     end
 end
