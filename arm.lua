@@ -2,7 +2,10 @@ Arm = {}
 Arm.__index = Arm
 
 
-
+q1 = {1,2,3,6,7,8}
+q2 = {4,5,9,10}
+q3 = {11,12,13,16,17}
+q4 = {14,15,18,19,20}
 
 
 function Arm:new(pos)
@@ -19,16 +22,17 @@ end
 function Arm:update(dt, mx, my)
     --self.position.x = mx
     --self.position.y = my
+    --print(self.position.x, self.position.y)
 end
 
-function Arm:move()
-
+function Arm:move(new_x, new_y)
+    self.position.x = new_x
+    self.position.y = new_y
 end
 
 function Arm:set_rotation(dir)
     if dir == "top" then
         self.rot = math.rad(-90)
-
     elseif dir == "left" then
         self.rot = math.rad(180)
     elseif dir == "right" then
@@ -51,17 +55,43 @@ function Arm:reset()
 
 end
 
-function Arm:grab_card(card)
+function Arm:grab_card(card, start)
+    local v = card.spot
+    local start = {}
+    --print(start.x, start.y) -- prints 120, 20
+    if does_table_contains(q1, v) then
+        print("card in q1")
+        self:set_rotation("top")
+        start = {x=120, y=-40}
+    elseif does_table_contains(q2, v) then
+        self:set_rotation("right")
+        start = {x=250, y=120}
+        print("card in q2")
+    elseif does_table_contains(q3, v) then
+        self:set_rotation("left")
+        start = {x=-40, y=120}
+        print("card in q3")
+    elseif does_table_contains(q4, v) then
+        self:set_rotation("bottom")
+        start = {x=120, y=250}
+        print("card in q4")
+    end
+
     card.hand = self
+    self:move(start.x, start.y)
+    --self.position = from_pos
     flux.to(self.position, 0.3, { x = card.home_pos.x, y = card.home_pos.y }):oncomplete(
         function()
             card.is_held = true
             card.is_on_board = false
             card.is_hovered = false
-            flux.to(self.position, 0.3, { x = self.starting_pos.x, y = self.starting_pos.y }):oncomplete(
+            flux.to(self.position, 0.3, { x = start.x, y = start.y }):oncomplete(
                 function()
+                    print(start.x, start.y) -- prints 58, 65
                     card.is_held = false
                     card.hand = nil
+                    del(active_cards, card)
+                    table.insert(graveyard, card)
                 end
             )
         end

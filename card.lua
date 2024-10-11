@@ -50,8 +50,9 @@ function generate_card_types()
 end
 
 
-function Card:new(pos)
+function Card:new(pos, spot)
     local _card = setmetatable({}, Card)
+    _card.spot = spot
     _card.home_pos = pos
     _card.face_img = card_types[1]
     _card.position = {x= 120, y=-50}

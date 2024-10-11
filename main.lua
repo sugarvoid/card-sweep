@@ -3,6 +3,7 @@ flux = require("lib.flux")
 
 require("card")
 require("arm")
+require("lib.timer")
 
 
 player_can_click = true
@@ -20,7 +21,11 @@ NEEDED_PAIRS = 20
 
 graveyard = {}
 
+DEBUG_SCALE = 0.3
 
+
+
+hovered_card = {}
 
 all_windlines = {}
 active_cards = {}
@@ -52,7 +57,7 @@ card_pos = {
 
 
 for i = 1, 20 do
-    local _c = Card:new(card_pos[i])
+    local _c = Card:new(card_pos[i], i)
     _c:set_face(generate_card_types())
     table.insert(active_cards, _c)
     --generate_card_types()
@@ -103,18 +108,20 @@ end
 
 function love.mousepressed(x, y, button, _)
     if player_can_click then
-        if button == 1 then -- Versions prior to 0.10.0 use the MouseConstant 'l'
-            for _, c in ipairs(active_cards) do
-                if c.is_hovered and c.is_clickable then
-                    if selected_card_1 == nil then
-                        selected_card_1 = c
-                        c:show_face()
-                    elseif selected_card_1 ~= nil and selected_card_2 == nil then
-                        selected_card_2 = c
-                        c:show_face()
+        if selected_card_1 == nil or selected_card_2 == nil then
+            if button == 1 then -- Versions prior to 0.10.0 use the MouseConstant 'l'
+                for _, c in ipairs(active_cards) do
+                    if c.is_hovered and c.is_clickable then
+                        if selected_card_1 == nil then
+                            selected_card_1 = c
+                            c:show_face()
+                        elseif selected_card_1 ~= nil and selected_card_2 == nil then
+                            selected_card_2 = c
+                            c:show_face()
+                        end
+                        --arm:grab_card(c)
+                        --c:show_face()
                     end
-                    --arm:grab_card(c)
-                    --c:show_face()
                 end
             end
         end
@@ -155,11 +162,30 @@ function love.draw()
     arm_1:draw()
     arm_2:draw()
 
+    draw_debug()
+
     love.graphics.push("all")
 
     love.graphics.setColor(love.math.colorFromBytes(33, 33, 35))
     love.graphics.rectangle("fill", 0, 0, 240, 15)
     love.graphics.pop()
+
+
+
+end
+
+function draw_debug()
+    if selected_card_1 ~= nil then
+        love.graphics.print("Card 1- Spot: "..selected_card_1.spot.. ", Type: " .. selected_card_1.type, 0, 215, 0, DEBUG_SCALE, DEBUG_SCALE)
+    else
+        love.graphics.print("Card 1- Empty", 0, 215, 0, DEBUG_SCALE, DEBUG_SCALE)
+    end
+    if selected_card_2 ~= nil then
+        love.graphics.print("Card 2- Spot: "..selected_card_2.spot.. ", Type: " .. selected_card_2.type, 0, 225, 0, DEBUG_SCALE, DEBUG_SCALE)
+    else
+        love.graphics.print("Card 2- Empty", 0, 225, 0, DEBUG_SCALE, DEBUG_SCALE)
+    end
+
 
 end
 
@@ -226,12 +252,7 @@ function table.remove_item(_table, _item)
     end
 end
 
-function draw_debug()
-    love.graphics.print("player slot " .. "add", 4, 2)
-    love.graphics.print("human slot " .. "add", 4, 22)
-    love.graphics.print("future slot " .. "add", 4, 44)
-    love.graphics.print("p looking left: " .. "add", 4, 66)
-end
+
 
 function goto_gameover(reason)
     -- 0 = bad lick
@@ -263,5 +284,25 @@ function is_on_screen(obj, rect)
         return false
     else
         return true
+    end
+end
+
+function does_table_contains(tbl, x)
+    found = false
+    for _, v in pairs(tbl) do
+        if v == x then 
+            found = true 
+        end
+    end
+    return found
+end
+
+function del(_table, _item)
+    for i, v in ipairs(_table) do
+        if v == _item then
+            _table[i] = _table[#_table]
+            _table[#_table] = nil
+            return
+        end
     end
 end
