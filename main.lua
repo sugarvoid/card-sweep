@@ -119,6 +119,10 @@ function love.mousepressed(x, y, button, _)
                             selected_card_2 = c
                             c:show_face()
                         end
+
+                        if selected_card_1 ~= nil and selected_card_2 ~= nil then
+                            check_cards()
+                        end
                         --arm:grab_card(c)
                         --c:show_face()
                     end
@@ -207,7 +211,7 @@ function love.keypressed(key, scancode, isrepeat)
     if key == "left" then -- move right
         print("left")
         put_cards_on_board()
-        print(random_float())
+        --print(random_float())
     elseif key == "right" then
         print("right")
     end

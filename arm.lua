@@ -10,7 +10,7 @@ q4 = {14,15,18,19,20}
 
 function Arm:new(pos)
     local _arm = setmetatable({}, Arm)
-    _arm.position = {x=0, y=0}
+    _arm.position = {x=0, y=-100}
     _arm.img = love.graphics.newImage("arm.png")
     _arm.ox = 15
     _arm.oy = 15
@@ -55,7 +55,7 @@ function Arm:reset()
 
 end
 
-function Arm:grab_card(card, start)
+function Arm:grab_card(card)
     local v = card.spot
     local start = {}
     --print(start.x, start.y) -- prints 120, 20
@@ -87,7 +87,7 @@ function Arm:grab_card(card, start)
             card.is_hovered = false
             flux.to(self.position, 0.3, { x = start.x, y = start.y }):oncomplete(
                 function()
-                    print(start.x, start.y) -- prints 58, 65
+                    --print(start.x, start.y) -- prints 58, 65
                     card.is_held = false
                     card.hand = nil
                     del(active_cards, card)

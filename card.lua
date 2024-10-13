@@ -36,15 +36,15 @@ local card_types = {
 
 function generate_card_types()
   local roll = random_float()
-  print(roll)
+  --print(roll)
   if roll <= NORMAL_CHANCE then
-    print("normal")
+    --print("normal")
     return love.math.random(2, 5)
   elseif roll > NORMAL_CHANCE and roll <= (NORMAL_CHANCE + SKULL_CHANCE) then
-    print("skull")
+    --print("skull")
     return 6
   elseif roll > (NORMAL_CHANCE + SKULL_CHANCE) then
-    print("cross")
+    --print("cross")
     return 7
   end
 end
@@ -116,7 +116,7 @@ function Card:slide_to_home_position()
 end
 
 function Card:set_face(c_idx)
-  print("c_index = " .. tostring(c_idx))
+  --print("c_index = " .. tostring(c_idx))
     self.type = c_idx
     --self.face_img = card_types[c_idx]
 end
@@ -130,8 +130,8 @@ function Card:show_face()
   self.is_clickable = false
   flux.to(self, 0.3, { sx = 0}):oncomplete(
         function()
-          print(self.type)
-            print(card_types[self.type])
+          --print(self.type)
+            --print(card_types[self.type])
             self.face_img = card_types[self.type]
             
             flux.to(self, 0.3, { sx = 1}):oncomplete(
@@ -187,7 +187,18 @@ function Card:check_if_hovered(mx, my)
 end
 
 function check_cards()
-  return selected_card_1.type == selected_card_2.type
+  if selected_card_1.type == selected_card_2.type then
+    arm_1:grab_card(selected_card_1)
+    arm_2:grab_card(selected_card_2)
+    selected_card_1 = nil
+    selected_card_2 = nil
+
+  else
+    selected_card_1:show_back()
+    selected_card_2:show_back()
+  end
+
+  
 end
 
 
