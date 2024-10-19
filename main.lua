@@ -7,7 +7,7 @@ require("arm")
 --require("lib.timer")
 
 
-player_can_click = true
+player_can_click = false
 
 selected_card_1 = nil
 selected_card_2 = nil
@@ -119,6 +119,7 @@ function love.mousepressed(x, y, button, _)
                             c:show_face()
                         elseif selected_card_1 ~= nil and selected_card_2 == nil then
                             selected_card_2 = c
+                            player_can_click = false
                             c:show_face()
                         end
 
@@ -235,6 +236,7 @@ function put_cards_on_board()
         i=i+1 
         if i== #active_cards then
             print("cards done?")
+            player_can_click = true
         end
     end, #active_cards)
     

@@ -10,6 +10,8 @@ local CARD_H = 32
 local ox = CARD_W/2
 local oy = CARD_H/2
 
+local FLIP_DURATION = 0.2
+
 NORMAL_CHANCE = 0.70
 SKULL_CHANCE = 0.20
 CROSS_CHANCE = 0.10
@@ -84,7 +86,7 @@ end
 
 function Card:draw()
 
-    if self.is_hovered and self.is_clickable then
+    if self.is_hovered and self.is_clickable and player_can_click then
         love.graphics.push("all")
         love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
         love.graphics.rectangle("line", self.hitbox.x, self.hitbox.y, self.hitbox.w, self.hitbox.h)
@@ -128,27 +130,42 @@ end
 
 function Card:show_face()
   self.is_clickable = false
-  flux.to(self, 0.3, { sx = 0}):oncomplete(
+  flux.to(self, FLIP_DURATION, { sx = 0}):oncomplete(
         function()
           --print(self.type)
             --print(card_types[self.type])
             self.face_img = card_types[self.type]
             
-            flux.to(self, 0.3, { sx = 1}):oncomplete(
+            flux.to(self, FLIP_DURATION, { sx = 1}):oncomplete(
                 function()
                     print('ding')
                     --self.is_clickable = true
                     if selected_card_1 ~= nil and selected_card_2 ~= nil then
                         if check_cards() then
                           --TODO: Remove cards
-                          selected_card_1:remove_from_board()
-                          selected_card_2:remove_from_board()
+                          Timer.script(function(wait)
+                            wait(1)
+                            arm_1:grab_card(selected_card_1)
+                            arm_2:grab_card(selected_card_2)
+                            wait(0.5)
+                            selected_card_1 = nil
+                            selected_card_2 = nil
+                            player_can_click = true
+                          end)
+                          
                         else
                           --TODO: Flip them back over
-                          
+                          Timer.script(function(wait)
+                            wait(1)
+                            selected_card_1:show_back()
+                            selected_card_2:show_back()
+                            wait(0.2)
+                            selected_card_1 = nil
+                            selected_card_2 = nil
+                            player_can_click = true
+                          end)
                         end
-                        selected_card_1 = nil
-                        selected_card_2 = nil
+                        
                     end
                 end
             )
@@ -161,11 +178,11 @@ end
 
 function Card:show_back()
   self.is_clickable = false
-  flux.to(self, 0.3, { sx = 0}):oncomplete(
+  flux.to(self, FLIP_DURATION, { sx = 0}):oncomplete(
         function()
             self.face_img = card_types[1]
             
-            flux.to(self, 0.3, { sx = 1}):oncomplete(
+            flux.to(self, FLIP_DURATION, { sx = 1}):oncomplete(
                 function()
                     print('ding')
                     self.is_clickable = true
@@ -187,18 +204,7 @@ function Card:check_if_hovered(mx, my)
 end
 
 function check_cards()
-  if selected_card_1.type == selected_card_2.type then
-    arm_1:grab_card(selected_card_1)
-    arm_2:grab_card(selected_card_2)
-    selected_card_1 = nil
-    selected_card_2 = nil
-
-  else
-    selected_card_1:show_back()
-    selected_card_2:show_back()
-  end
-
-  
+  return selected_card_1.type == selected_card_2.type
 end
 
 
