@@ -1,9 +1,10 @@
 love.graphics.setDefaultFilter("nearest", "nearest")
 flux = require("lib.flux")
+Timer = require "lib.timer"
 
 require("card")
 require("arm")
-require("lib.timer")
+--require("lib.timer")
 
 
 player_can_click = true
@@ -89,6 +90,7 @@ end
 
 function love.update(dt)
     flux.update(dt)
+    Timer.update(dt)
 
 
     -- mouse position with applied translate and scale:
@@ -227,9 +229,15 @@ function love.keypressed(key, scancode, isrepeat)
 end
 
 function put_cards_on_board()
-    for _, c in ipairs(active_cards) do
-        c:slide_to_home_position()
-    end
+    i = 1
+    Timer.every(0.1, function() 
+        active_cards[i]:slide_to_home_position() 
+        i=i+1 
+        if i== #active_cards then
+            print("cards done?")
+        end
+    end, #active_cards)
+    
 end
 
 function do_action()
