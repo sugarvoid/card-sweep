@@ -9,8 +9,19 @@ require("arm")
 
 player_can_click = false
 
+-- TODO: make these numbers, not tables
 selected_card_1 = nil
 selected_card_2 = nil
+
+pick_1 = 0
+pick_2 = 0
+
+board = {
+    0,0,0,0,0,
+    0,0,0,0,0,
+    0,0,0,0,0,
+    0,0,0,0,0
+}
 
 slots = { 2, 20, 38, 56, 74, 92, 110 }
 
@@ -231,14 +242,16 @@ end
 
 function put_cards_on_board()
     i = 1
-    Timer.every(0.1, function() 
-        active_cards[i]:slide_to_home_position() 
-        i=i+1 
-        if i== #active_cards then
+    Timer.every(0.1, function()
+        if i <= #active_cards then 
+            active_cards[i]:slide_to_home_position() 
+        elseif i== #active_cards + 5 then
+            -- hacky way to delay player being able to click
             print("cards done?")
             player_can_click = true
         end
-    end, #active_cards)
+        i=i+1 
+    end, #active_cards + 5)
     
 end
 
