@@ -135,7 +135,7 @@ function love.mousepressed(x, y, button, _)
                         end
 
                         if selected_card_1 ~= nil and selected_card_2 ~= nil then
-                            check_cards()
+                            check_cards(selected_card_1, selected_card_2)
                         end
                         --arm:grab_card(c)
                         --c:show_face()

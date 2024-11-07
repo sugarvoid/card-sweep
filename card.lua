@@ -140,33 +140,33 @@ function Card:show_face()
                 function()
                     print('ding')
                     --self.is_clickable = true
-                    if selected_card_1 ~= nil and selected_card_2 ~= nil then
-                        if check_cards() then
-                          --TODO: Remove cards
-                          Timer.script(function(wait)
-                            wait(1)
-                            arm_1:grab_card(selected_card_1)
-                            arm_2:grab_card(selected_card_2)
-                            wait(0.5)
-                            selected_card_1 = nil
-                            selected_card_2 = nil
-                            player_can_click = true
-                          end)
+                    -- if selected_card_1 ~= nil and selected_card_2 ~= nil then
+                    --     if check_cards() then
+                    --       --TODO: Remove cards
+                    --       Timer.script(function(wait)
+                    --         wait(1)
+                    --         arm_1:grab_card(selected_card_1)
+                    --         arm_2:grab_card(selected_card_2)
+                    --         wait(0.5)
+                    --         selected_card_1 = nil
+                    --         selected_card_2 = nil
+                    --         player_can_click = true
+                    --       end)
                           
-                        else
-                          --TODO: Flip them back over
-                          Timer.script(function(wait)
-                            wait(1)
-                            selected_card_1:show_back()
-                            selected_card_2:show_back()
-                            wait(0.2)
-                            selected_card_1 = nil
-                            selected_card_2 = nil
-                            player_can_click = true
-                          end)
-                        end
+                    --     else
+                    --       --TODO: Flip them back over
+                    --       Timer.script(function(wait)
+                    --         wait(1)
+                    --         selected_card_1:show_back()
+                    --         selected_card_2:show_back()
+                    --         wait(0.5)
+                    --         selected_card_1 = nil
+                    --         selected_card_2 = nil
+                    --         player_can_click = true
+                    --       end)
+                    --     end
                         
-                    end
+                    -- end
                 end
             )
         end
@@ -203,8 +203,35 @@ function Card:check_if_hovered(mx, my)
     end
 end
 
-function check_cards()
-  return selected_card_1.type == selected_card_2.type
+function check_cards(c1, c2)
+  --return selected_card_1.type == selected_card_2.type
+  
+        if c1.type == c2.type then
+          --TODO: Remove cards
+          Timer.script(function(wait)
+            wait(1)
+            arm_1:grab_card(c1)
+            arm_2:grab_card(c2)
+            wait(0.5)
+            selected_card_1 = nil
+            selected_card_2 = nil
+            player_can_click = true
+          end)
+          
+        else
+          --TODO: Flip them back over
+          Timer.script(function(wait)
+            wait(1)
+            c1:show_back()
+            c2:show_back()
+            wait(0.5)
+            selected_card_1 = nil
+            selected_card_2 = nil
+            player_can_click = true
+          end)
+        end
+        
+    
 end
 
 
