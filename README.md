@@ -13,8 +13,8 @@ Learned quite a bit, but no longer interested in investing more time into this p
 
 ## How To Play
 -   Match cards
--   Matching two skulls will end the game
--   Matching two crosses, a skull will be removed from the board
+-   Matching two skulls will end the game (not implemented yet)
+-   Matching two crosses, a skull will be removed from the board (not implemented yet)
 
 <hr>
 

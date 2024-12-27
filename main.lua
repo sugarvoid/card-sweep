@@ -4,7 +4,6 @@ Timer = require "lib.timer"
 
 require("card")
 require("arm")
---require("lib.timer")
 
 
 player_can_click = false
@@ -79,10 +78,6 @@ end
 
 local mx, my
 
---WINDOW_W, WINDOW_H = love.window.getDesktopDimensions()
---WINDOW_W, WINDOW_H = WINDOW_W * 0.8, WINDOW_H * 0.8
-
-
 
 function love.load()
     math.randomseed(os.time())
@@ -103,14 +98,10 @@ function love.update(dt)
     flux.update(dt)
     Timer.update(dt)
 
-
     -- mouse position with applied translate and scale:
     mx = math.floor((love.mouse.getX() - window.translateX) / window.scale + 0.5)
     my = math.floor((love.mouse.getY() - window.translateY) / window.scale + 0.5)
     -- your code here, use mx and my as mouse X and Y positions
-    --print(mx, my)
-    arm_1:update(dt, mx, my)
-    arm_2:update(dt, mx, my)
     for _, c in ipairs(active_cards) do
         c:update(dt)
         if c.is_on_board then
@@ -122,7 +113,7 @@ end
 function love.mousepressed(x, y, button, _)
     if player_can_click then
         if selected_card_1 == nil or selected_card_2 == nil then
-            if button == 1 then -- Versions prior to 0.10.0 use the MouseConstant 'l'
+            if button == 1 then
                 for _, c in ipairs(active_cards) do
                     if c.is_hovered and c.is_clickable then
                         if selected_card_1 == nil then
@@ -137,8 +128,6 @@ function love.mousepressed(x, y, button, _)
                         if selected_card_1 ~= nil and selected_card_2 ~= nil then
                             check_cards(selected_card_1, selected_card_2)
                         end
-                        --arm:grab_card(c)
-                        --c:show_face()
                     end
                 end
             end
@@ -147,7 +136,6 @@ function love.mousepressed(x, y, button, _)
             for _, c in ipairs(active_cards) do
                 if c.is_hovered and c.is_clickable then
                     arm_1:grab_card(c)
-                    --c:show_face()
                 end
             end
         end
@@ -160,17 +148,10 @@ function love.draw()
     love.graphics.scale(window.scale)
     -- your graphics code here, optimized for fullHD
 
-
     love.graphics.push("all")
-
     love.graphics.setColor(love.math.colorFromBytes(0, 81, 44))
     love.graphics.rectangle("fill", 0, 0, 240, 240)
     love.graphics.pop()
-
-    --love.graphics.print(mx .. "," .. my, 0, 0, 0, 0.6, 0.6)
-
-
-
 
     for _, c in ipairs(active_cards) do
         c:draw()
@@ -183,7 +164,6 @@ function love.draw()
     draw_debug()
 
     love.graphics.push("all")
-
     love.graphics.setColor(love.math.colorFromBytes(33, 33, 35))
     love.graphics.rectangle("fill", 0, 0, 240, 15)
     love.graphics.pop()
@@ -207,21 +187,21 @@ function draw_debug()
 
 end
 
-function resize(w, h)                          -- update new translation and scale:
-    local w1, h1 = window.width, window.height -- target rendering resolution
+function resize(w, h)                         
+    local w1, h1 = window.width, window.height
     local scale = math.min(w / w1, h / h1)
     window.translateX, window.translateY, window.scale = (w - w1 * scale) / 2, (h - h1 * scale) / 2, scale
 end
 
 function love.resize(w, h)
-    resize(w, h) -- update new translation and scale
+    resize(w, h)
 end
 
 function love.keypressed(key, scancode, isrepeat)
-    --print(isrepeat)
     if key == "escape" then
         love.event.quit()
     end
+    --TODO: For debug, remove later
     if key == "left" then -- move right
         print("left")
         put_cards_on_board()
@@ -229,12 +209,7 @@ function love.keypressed(key, scancode, isrepeat)
     elseif key == "right" then
         print("right")
     end
-    if key == "z" then
 
-    end
-    if key == "x" then
-
-    end
     if key == "space" then
         do_action()
     end
@@ -282,9 +257,6 @@ end
 
 
 function goto_gameover(reason)
-    -- 0 = bad lick
-    -- 1 = bad move
-    -- 2 = game won
     print("game over")
 end
 
@@ -300,9 +272,6 @@ function draw_gameover()
 
 end
 
----Check if an object is on screen
----@param obj table
----@param rect table with screen data {x=0,y=0,w=0,h=0}
 function is_on_screen(obj, rect)
     if ((obj.x >= rect.x + rect.w) or
             (obj.x + obj.w <= rect.x) or

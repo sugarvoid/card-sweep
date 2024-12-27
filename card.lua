@@ -38,7 +38,6 @@ local card_types = {
 
 function generate_card_types()
   local roll = random_float()
-  --print(roll)
   if roll <= NORMAL_CHANCE then
     --print("normal")
     return love.math.random(2, 5)
@@ -66,10 +65,6 @@ function Card:new(pos, spot)
   _card.sx = 1
   _card.hand = nil
   _card.is_held = false
-
-
-  --_card.position = _card.home_pos
-
   return _card
 end
 
@@ -93,8 +88,6 @@ function Card:draw()
 
   if self.is_face_down then
     love.graphics.draw(SPRITESHEET, self.face_img, self.position.x, self.position.y, 0, self.sx, 1, ox, oy)
-    --love.graphics.points(self.position.x, self.position.y)
-    --love.graphics.rectangle("line", self.hitbox.x, self.hitbox.y, self.hitbox.w, self.hitbox.h)
   else
 
   end
@@ -116,9 +109,7 @@ function Card:slide_to_home_position()
 end
 
 function Card:set_face(c_idx)
-  --print("c_index = " .. tostring(c_idx))
   self.type = c_idx
-  --self.face_img = card_types[c_idx]
 end
 
 function Card:remove_from_board()
@@ -134,44 +125,10 @@ function Card:show_face()
       --print(card_types[self.type])
       self.face_img = card_types[self.type]
 
-      flux.to(self, FLIP_DURATION, { sx = 1 }):oncomplete(
-        function()
-          print('ding')
-          --self.is_clickable = true
-          -- if selected_card_1 ~= nil and selected_card_2 ~= nil then
-          --     if check_cards() then
-          --       --TODO: Remove cards
-          --       Timer.script(function(wait)
-          --         wait(1)
-          --         arm_1:grab_card(selected_card_1)
-          --         arm_2:grab_card(selected_card_2)
-          --         wait(0.5)
-          --         selected_card_1 = nil
-          --         selected_card_2 = nil
-          --         player_can_click = true
-          --       end)
-
-          --     else
-          --       --TODO: Flip them back over
-          --       Timer.script(function(wait)
-          --         wait(1)
-          --         selected_card_1:show_back()
-          --         selected_card_2:show_back()
-          --         wait(0.5)
-          --         selected_card_1 = nil
-          --         selected_card_2 = nil
-          --         player_can_click = true
-          --       end)
-          --     end
-
-          -- end
-        end
-      )
+      flux.to(self, FLIP_DURATION, { sx = 1 })
     end
   )
 
-
-  --self.face_img = card_types.card_red
 end
 
 function Card:show_back()
@@ -189,8 +146,6 @@ function Card:show_back()
     end
   )
 
-
-  --self.face_img = card_types.card_red
 end
 
 function Card:check_if_hovered(mx, my)
@@ -230,9 +185,6 @@ function check_cards(c1, c2)
 end
 
 function random_float()
-  --local range = max - min
   local offset = 1 * math.random()
-  --local unrounded = min + offset
-  --local powerOfTen = 10 ^ precision
   return math.floor(offset * 10 + 0.5) / 10
 end

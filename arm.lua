@@ -19,16 +19,12 @@ function Arm:new(pos)
     return _arm
 end
 
-function Arm:update(dt, mx, my)
-    --self.position.x = mx
-    --self.position.y = my
-    --print(self.position.x, self.position.y)
-end
 
 function Arm:move(new_x, new_y)
     self.position.x = new_x
     self.position.y = new_y
 end
+
 
 function Arm:set_rotation(dir)
     if dir == "top" then
@@ -58,7 +54,7 @@ end
 function Arm:grab_card(card)
     local v = card.spot
     local start = {}
-    --print(start.x, start.y) -- prints 120, 20
+    
     if does_table_contains(q1, v) then
         print("card in q1")
         self:set_rotation("top")
@@ -79,7 +75,6 @@ function Arm:grab_card(card)
 
     card.hand = self
     self:move(start.x, start.y)
-    --self.position = from_pos
     flux.to(self.position, 0.3, { x = card.home_pos.x, y = card.home_pos.y }):oncomplete(
         function()
             card.is_held = true
@@ -87,7 +82,6 @@ function Arm:grab_card(card)
             card.is_hovered = false
             flux.to(self.position, 0.3, { x = start.x, y = start.y }):oncomplete(
                 function()
-                    --print(start.x, start.y) -- prints 58, 65
                     card.is_held = false
                     card.hand = nil
                     del(active_cards, card)
