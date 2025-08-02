@@ -16,10 +16,10 @@ pick_1 = 0
 pick_2 = 0
 
 board = {
-    0,0,0,0,0,
-    0,0,0,0,0,
-    0,0,0,0,0,
-    0,0,0,0,0
+    0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0
 }
 
 slots = { 2, 20, 38, 56, 74, 92, 110 }
@@ -92,6 +92,9 @@ function love.load()
     width, height = love.graphics.getDimensions()
     love.window.setMode(width, height, { resizable = true, borderless = false })
     resize(width, height) -- update new translation and scale
+
+
+    start_game()
 end
 
 function love.update(dt)
@@ -167,27 +170,24 @@ function love.draw()
     love.graphics.setColor(love.math.colorFromBytes(33, 33, 35))
     love.graphics.rectangle("fill", 0, 0, 240, 15)
     love.graphics.pop()
-
-
-
 end
 
 function draw_debug()
     if selected_card_1 ~= nil then
-        love.graphics.print("Card 1- Spot: "..selected_card_1.spot.. ", Type: " .. selected_card_1.type, 0, 215, 0, DEBUG_SCALE, DEBUG_SCALE)
+        love.graphics.print("Card 1- Spot: " .. selected_card_1.spot .. ", Type: " .. selected_card_1.type, 0, 215, 0,
+            DEBUG_SCALE, DEBUG_SCALE)
     else
         love.graphics.print("Card 1- Empty", 0, 215, 0, DEBUG_SCALE, DEBUG_SCALE)
     end
     if selected_card_2 ~= nil then
-        love.graphics.print("Card 2- Spot: "..selected_card_2.spot.. ", Type: " .. selected_card_2.type, 0, 225, 0, DEBUG_SCALE, DEBUG_SCALE)
+        love.graphics.print("Card 2- Spot: " .. selected_card_2.spot .. ", Type: " .. selected_card_2.type, 0, 225, 0,
+            DEBUG_SCALE, DEBUG_SCALE)
     else
         love.graphics.print("Card 2- Empty", 0, 225, 0, DEBUG_SCALE, DEBUG_SCALE)
     end
-
-
 end
 
-function resize(w, h)                         
+function resize(w, h)
     local w1, h1 = window.width, window.height
     local scale = math.min(w / w1, h / h1)
     window.translateX, window.translateY, window.scale = (w - w1 * scale) / 2, (h - h1 * scale) / 2, scale
@@ -204,37 +204,38 @@ function love.keypressed(key, scancode, isrepeat)
     --TODO: For debug, remove later
     if key == "left" then -- move right
         print("left")
-        put_cards_on_board()
+
+
         --print(random_float())
     elseif key == "right" then
         print("right")
     end
 
     if key == "space" then
-        do_action()
+
     end
 end
 
 function put_cards_on_board()
     i = 1
     Timer.every(0.1, function()
-        if i <= #active_cards then 
-            active_cards[i]:slide_to_home_position() 
-        elseif i== #active_cards + 5 then
+        if i <= #active_cards then
+            active_cards[i]:slide_to_home_position()
+        elseif i == #active_cards + 5 then
             -- hacky way to delay player being able to click
             print("cards done?")
             player_can_click = true
         end
-        i=i+1 
+        i = i + 1
     end, #active_cards + 5)
-    
-end
-
-function do_action()
-    print("action")
 end
 
 function start_game()
+    Timer.script(function(wait)
+        wait(2)
+        print("starting game")
+        put_cards_on_board()
+    end)
 end
 
 function table.for_each(_list)
@@ -253,8 +254,6 @@ function table.remove_item(_table, _item)
         end
     end
 end
-
-
 
 function goto_gameover(reason)
     print("game over")
@@ -286,8 +285,8 @@ end
 function does_table_contains(tbl, x)
     found = false
     for _, v in pairs(tbl) do
-        if v == x then 
-            found = true 
+        if v == x then
+            found = true
         end
     end
     return found

@@ -17,14 +17,23 @@ SKULL_CHANCE = 0.20
 CROSS_CHANCE = 0.10
 
 
+cross_count = 2
+skull_count = 4
+
+blue_count = 4
+red_count = 4
+yellow_count = 2
+green_count = 4
+
+
 local card_types = {
-  love.graphics.newQuad(0, 0, 22, 32, SPRITESHEET),     --card_back =
-  love.graphics.newQuad(22, 0, 22, 32, SPRITESHEET),    --card_red =
-  love.graphics.newQuad(44, 0, 22, 32, SPRITESHEET),    --card_blue =
-  love.graphics.newQuad(66, 0, 22, 32, SPRITESHEET),    --card_green =
-  love.graphics.newQuad(88, 0, 22, 32, SPRITESHEET),    --card_yellow =
-  love.graphics.newQuad(110, 0, 22, 32, SPRITESHEET),   --card_skull =
-  love.graphics.newQuad(132, 0, 22, 32, SPRITESHEET),   --card_cross =
+  love.graphics.newQuad(0, 0, 22, 32, SPRITESHEET),   --card_back =
+  love.graphics.newQuad(22, 0, 22, 32, SPRITESHEET),  --card_red =
+  love.graphics.newQuad(44, 0, 22, 32, SPRITESHEET),  --card_blue =
+  love.graphics.newQuad(66, 0, 22, 32, SPRITESHEET),  --card_green =
+  love.graphics.newQuad(88, 0, 22, 32, SPRITESHEET),  --card_yellow =
+  love.graphics.newQuad(110, 0, 22, 32, SPRITESHEET), --card_skull =
+  love.graphics.newQuad(132, 0, 22, 32, SPRITESHEET), --card_cross =
 }
 
 -- local card_back = love.graphics.newQuad(0, 0, 22, 32, SPRITESHEET)
@@ -51,21 +60,21 @@ function generate_card_types()
 end
 
 function Card:new(pos, spot)
-  local _card = setmetatable({}, Card)
-  _card.spot = spot
-  _card.home_pos = pos
-  _card.face_img = card_types[1]
-  _card.position = { x = 120, y = -50 }
-  _card.type = 0   -- or type???
-  _card.is_face_down = true
-  _card.is_clickable = false
-  _card.is_on_board = true
-  _card.is_hovered = false
-  _card.hitbox = { x = _card.home_pos.x - ox, y = _card.home_pos.y - oy, w = CARD_W, h = CARD_H }
-  _card.sx = 1
-  _card.hand = nil
-  _card.is_held = false
-  return _card
+  local c = setmetatable({}, Card)
+  c.spot = spot
+  c.home_pos = pos
+  c.face_img = card_types[1]
+  c.position = { x = 120, y = -50 }
+  c.type = 0 -- or type???
+  c.is_face_down = true
+  c.is_clickable = false
+  c.is_on_board = true
+  c.is_hovered = false
+  c.hitbox = { x = c.home_pos.x - ox, y = c.home_pos.y - oy, w = CARD_W, h = CARD_H }
+  c.sx = 1
+  c.hand = nil
+  c.is_held = false
+  return c
 end
 
 function Card:update(dt)
@@ -128,7 +137,6 @@ function Card:show_face()
       flux.to(self, FLIP_DURATION, { sx = 1 })
     end
   )
-
 end
 
 function Card:show_back()
@@ -145,7 +153,6 @@ function Card:show_back()
       )
     end
   )
-
 end
 
 function Card:check_if_hovered(mx, my)
@@ -160,16 +167,27 @@ function check_cards(c1, c2)
   --return selected_card_1.type == selected_card_2.type
 
   if c1.type == c2.type then
-    --TODO: Remove cards
-    Timer.script(function(wait)
-      wait(1)
-      arm_1:grab_card(c1)
-      arm_2:grab_card(c2)
-      wait(0.5)
-      selected_card_1 = nil
-      selected_card_2 = nil
-      player_can_click = true
-    end)
+    if c1.type == 7 then
+      print("Cross cards matched. Remove skull")
+      Timer.script(function(wait)
+        wait(1)
+        remove_skull()
+        wait(1)
+        arm_1:grab_card(c1)
+        arm_2:grab_card(c2)
+        wait(0.5)
+        reset_selected_cards()
+      end)
+    else
+      --TODO: Remove cards
+      Timer.script(function(wait)
+        wait(1)
+        arm_1:grab_card(c1)
+        arm_2:grab_card(c2)
+        wait(0.5)
+        reset_selected_cards()
+      end)
+    end
   else
     --TODO: Flip them back over
     Timer.script(function(wait)
@@ -177,14 +195,35 @@ function check_cards(c1, c2)
       c1:show_back()
       c2:show_back()
       wait(0.5)
-      selected_card_1 = nil
-      selected_card_2 = nil
-      player_can_click = true
+      reset_selected_cards()
     end)
   end
+end
+
+function reset_selected_cards()
+  selected_card_1 = nil
+  selected_card_2 = nil
+  player_can_click = true
 end
 
 function random_float()
   local offset = 1 * math.random()
   return math.floor(offset * 10 + 0.5) / 10
+end
+
+function remove_skull()
+  for _, c in ipairs(active_cards) do
+    if c.type == 6 then
+      print("found a skull")
+
+
+      Timer.script(function(wait)
+        c:show_face()
+        wait(0.5)
+        arm_2:grab_card(c)
+        reset_selected_cards()
+      end)
+      break
+    end
+  end
 end
