@@ -6,7 +6,7 @@ https://github.com/user-attachments/assets/0446f017-925e-49b6-aaf2-bace49078cf5
 Compare making a game in LÖVE and Godot. 
 
 ## Project Status
-?
+This project served its purpose as a learning experience. The game is functionally complete based on my original goals.
 
 ## How To Play
 -   Match cards
@@ -19,12 +19,10 @@ Compare making a game in LÖVE and Godot.
 | :--------: | :------------: |
 | Left Mouse | Flip Over Card |
 
-<hr>
-
 ## Credits
 
 ### Programming/Sprites
-- Dave
+- Me
 
 
 ### Libraries Used
