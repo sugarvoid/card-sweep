@@ -1,22 +1,17 @@
 # Card Sweep
 
-Remake of one of my Godot games. Using [LÖVE](https://love2d.org/) this time. 
+https://github.com/user-attachments/assets/0446f017-925e-49b6-aaf2-bace49078cf5
 
 ## Project Goal
 Compare making a game in LÖVE and Godot. 
 
 ## Project Status
-Learned quite a bit, but no longer interested in investing more time into this project. 
-
-
-<hr>
+?
 
 ## How To Play
 -   Match cards
--   Matching two skulls will end the game (not implemented yet)
--   Matching two crosses, a skull will be removed from the board (not implemented yet)
-
-<hr>
+-   Matching two skulls will end the game
+-   Matching two crosses, a skull will be removed from the board
 
 ## Controls 
 
@@ -36,3 +31,4 @@ Learned quite a bit, but no longer interested in investing more time into this p
 - Love2d [github](https://github.com/love2d/love)
 - Flux [github](https://github.com/rxi/flux)
 - Hump [github](https://github.com/vrld/hump)
+- Log [github](https://github.com/alterae/hello-love/blob/main/lib/log.lua)
