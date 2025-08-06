@@ -7,14 +7,14 @@ q3={11,12,13,16,17}
 q4={14,15,18,19,20}
 
 function Arm:new(pos)
- local _arm=setmetatable({},Arm)
- _arm.position={x=0,y=-100}
- _arm.img=love.graphics.newImage("res/arm.png")
- _arm.ox=15
- _arm.oy=15
- _arm.rot=math.rad(0)
- _arm.starting_pos={x=0,y=0}
- return _arm
+ local arm=setmetatable({},Arm)
+ arm.position={x=0,y=-100}
+ arm.img=love.graphics.newImage("res/arm.png")
+ arm.ox=15
+ arm.oy=15
+ arm.rot=math.rad(0)
+ arm.starting_pos={x=0,y=0}
+ return arm
 end
 
 function Arm:move(new_x,new_y)

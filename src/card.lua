@@ -30,21 +30,21 @@ local card_types={
 }
 
 function Card:new(pos,spot)
- local c=setmetatable({},Card)
- c.spot=spot
- c.home_pos=pos
- c.face_img=card_types[1]
- c.position={x=120,y=-50}
- c.type=0
- c.is_face_down=true
- c.is_clickable=false
- c.is_on_board=true
- c.is_hovered=false
- c.hitbox={x=c.home_pos.x-ox,y=c.home_pos.y-oy,w=CARD_W,h=CARD_H}
- c.sx=1
- c.hand=nil
- c.is_held=false
- return c
+ local card=setmetatable({},Card)
+ card.spot=spot
+ card.home_pos=pos
+ card.face_img=card_types[1]
+ card.position={x=120,y=-50}
+ card.type=0
+ card.is_face_down=true
+ card.is_clickable=false
+ card.is_on_board=true
+ card.is_hovered=false
+ card.hitbox={x=card.home_pos.x-ox,y=card.home_pos.y-oy,w=CARD_W,h=CARD_H}
+ card.sx=1
+ card.hand=nil
+ card.is_held=false
+ return card
 end
 
 function Card:update(dt)
@@ -87,7 +87,6 @@ function Card:set_face(c_idx)
 end
 
 function Card:remove_from_board()
- logger.debug('removing '..tostring(self))
 end
 
 function Card:show_face()
@@ -107,7 +106,6 @@ function Card:show_back()
    self.face_img=card_types[1]
    flux.to(self,FLIP_DURATION,{sx=1}):oncomplete(
     function()
-     logger.debug(tostring(self)..' flipped back over')
      self.is_clickable=true
     end
    )
@@ -125,6 +123,12 @@ end
 
 function check_cards(c1,c2)
  if c1.type==c2.type then
+  if c1.type==6 then
+   Timer.script(function(wait)
+    wait(2)
+    is_game_over=true
+   end)
+  end
   if c1.type==7 then
    logger.debug("Cross cards matched. Remove skull")
    Timer.script(function(wait)
@@ -174,7 +178,6 @@ end
 function remove_skull()
  for _,c in ipairs(active_cards) do
   if c.type==6 then
-   logger.debug("found a skull")
    Timer.script(function(wait)
     c:show_face()
     wait(0.5)

@@ -10,7 +10,6 @@ require("src.arm")
 
 player_can_click=false
 
--- TODO: make these numbers, not tables
 selected_card_1=nil
 selected_card_2=nil
 
@@ -35,6 +34,7 @@ NEEDED_PAIRS=20
 graveyard={}
 
 DEBUG_SCALE=0.3
+is_game_over=false
 
 hovered_card={}
 all_windlines={}
@@ -73,7 +73,6 @@ function love.load()
 
  -- if your code was optimized for fullHD:
  window={translateX=0,translateY=0,scale=3,width=240,height=240}
- --width, height = love.graphics.getDimensions(0, 81, 44, 225)
  width,height=love.graphics.getDimensions()
  love.window.setMode(width,height,{resizable=true,borderless=false})
  resize(width,height) -- update new translation and scale
@@ -84,7 +83,6 @@ function love.load()
   local _c=Card:new(card_pos[i],i)
   _c:set_face(card_values[i])
   table.insert(active_cards,_c)
-  --generate_card_types()
  end
 
  start_game()
@@ -94,10 +92,9 @@ function love.update(dt)
  flux.update(dt)
  Timer.update(dt)
 
- -- mouse position with applied translate and scale:
  mx=math.floor((love.mouse.getX()-window.translateX)/window.scale+0.5)
  my=math.floor((love.mouse.getY()-window.translateY)/window.scale+0.5)
- -- your code here, use mx and my as mouse X and Y positions
+
  for _,c in ipairs(active_cards) do
   c:update(dt)
   if c.is_on_board then
@@ -128,7 +125,7 @@ function love.mousepressed(x,y,button,_)
     end
    end
   end
-  if button==2 then -- Versions prior to 0.10.0 use the MouseConstant 'l'
+  if button==2 then
    for _,c in ipairs(active_cards) do
     if c.is_hovered and c.is_clickable then
      arm_1:grab_card(c)
@@ -149,22 +146,23 @@ function love.draw()
  love.graphics.rectangle("fill",0,0,240,240)
  love.graphics.pop()
 
- for _,c in ipairs(active_cards) do
-  c:draw()
- end
+ if not is_game_over then
+  for _,c in ipairs(active_cards) do
+   c:draw()
+  end
 
- --start of draw_play()
- arm_1:draw()
- arm_2:draw()
+  arm_1:draw()
+  arm_2:draw()
+ else
+  love.graphics.push("all")
+  love.graphics.setColor(love.math.colorFromBytes(245,245,245))
+  love.graphics.print("GAME\nOVER",50,50,0,2)
+  love.graphics.pop()
+ end
 
  if IS_DEBUG then
   draw_debug()
  end
-
- love.graphics.push("all")
- love.graphics.setColor(love.math.colorFromBytes(33,33,35))
- love.graphics.rectangle("fill",0,0,240,15)
- love.graphics.pop()
 end
 
 function draw_debug()
