@@ -35,12 +35,10 @@ function Arm:set_rotation(dir)
 end
 
 function Arm:draw()
- -- from the right offset = 15,15
- -- from the top = -90
- -- from the left = 180
- -- from the right = 0
- -- from the bottom = 90
+ love.graphics.push("all")
+ love.graphics.setColor(love.math.colorFromBytes(204,197,35))
  love.graphics.draw(self.img,self.position.x,self.position.y,self.rot,1,1,self.ox,self.oy)
+ love.graphics.pop()
 end
 
 function Arm:reset()
@@ -52,21 +50,17 @@ function Arm:grab_card(card)
  local start={}
 
  if does_table_contains(q1,v) then
-  print("card in q1")
   self:set_rotation("top")
   start={x=120,y=-40}
  elseif does_table_contains(q2,v) then
   self:set_rotation("right")
   start={x=250,y=120}
-  print("card in q2")
  elseif does_table_contains(q3,v) then
   self:set_rotation("left")
   start={x=-40,y=120}
-  print("card in q3")
  elseif does_table_contains(q4,v) then
   self:set_rotation("bottom")
   start={x=120,y=250}
-  print("card in q4")
  end
 
  card.hand=self

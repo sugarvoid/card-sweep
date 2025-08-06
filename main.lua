@@ -42,27 +42,42 @@ graveyard={}
 
 card_values={7,7,6,6,6,6,2,2,2,2,3,3,3,3,4,4,4,4,5,5}
 
-card_pos={
- {x=58,y=65},
- {x=88,y=65},
- {x=118,y=65},
- {x=148,y=65},
- {x=178,y=65},
- {x=58,y=105},
- {x=88,y=105},
- {x=118,y=105},
- {x=148,y=105},
- {x=178,y=105},
- {x=58,y=145},
- {x=88,y=145},
- {x=118,y=145},
- {x=148,y=145},
- {x=178,y=145},
- {x=58,y=185},
- {x=88,y=185},
- {x=118,y=185},
- {x=148,y=185},
-{x=178,y=185}}
+-- card_pos={
+--  {x=58,y=65},
+--  {x=88,y=65},
+--  {x=118,y=65},
+--  {x=148,y=65},
+--  {x=178,y=65},
+--  {x=58,y=105},
+--  {x=88,y=105},
+--  {x=118,y=105},
+--  {x=148,y=105},
+--  {x=178,y=105},
+--  {x=58,y=145},
+--  {x=88,y=145},
+--  {x=118,y=145},
+--  {x=148,y=145},
+--  {x=178,y=145},
+--  {x=58,y=185},
+--  {x=88,y=185},
+--  {x=118,y=185},
+--  {x=148,y=185},
+-- {x=178,y=185}}
+
+card_pos={}
+
+local start_x,start_y=58,65
+local x_spacing,y_spacing=25,35
+local columns,rows=5,4
+
+for row=0,rows-1 do
+ for col=0,columns-1 do
+  table.insert(card_pos,{
+   x=start_x+col*x_spacing,
+   y=start_y+row*y_spacing
+  })
+ end
+end
 
 local mx,my
 
@@ -254,15 +269,12 @@ function goto_gameover()
 end
 
 function draw_title()
-
 end
 
 function draw_play()
-
 end
 
 function draw_gameover()
-
 end
 
 function is_on_screen(obj,rect)

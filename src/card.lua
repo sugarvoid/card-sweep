@@ -11,10 +11,6 @@ local oy=CARD_H/2
 
 local FLIP_DURATION=0.2
 
--- local NORMAL_CHANCE=0.70
--- local SKULL_CHANCE=0.20
--- local CROSS_CHANCE=0.10
-
 cross_count=2
 skull_count=4
 
@@ -24,36 +20,14 @@ yellow_count=2
 green_count=4
 
 local card_types={
- love.graphics.newQuad(0,0,22,32,SPRITESHEET),--card_back =
- love.graphics.newQuad(22,0,22,32,SPRITESHEET),--card_red =
- love.graphics.newQuad(44,0,22,32,SPRITESHEET),--card_blue =
- love.graphics.newQuad(66,0,22,32,SPRITESHEET),--card_green =
- love.graphics.newQuad(88,0,22,32,SPRITESHEET),--card_yellow =
- love.graphics.newQuad(110,0,22,32,SPRITESHEET),--card_skull =
- love.graphics.newQuad(132,0,22,32,SPRITESHEET),--card_cross =
+ love.graphics.newQuad(0,0,22,32,SPRITESHEET),--card_back
+ love.graphics.newQuad(22,0,22,32,SPRITESHEET),--card_red
+ love.graphics.newQuad(44,0,22,32,SPRITESHEET),--card_blue
+ love.graphics.newQuad(66,0,22,32,SPRITESHEET),--card_green
+ love.graphics.newQuad(88,0,22,32,SPRITESHEET),--card_yellow
+ love.graphics.newQuad(110,0,22,32,SPRITESHEET),--card_skull
+ love.graphics.newQuad(132,0,22,32,SPRITESHEET),--card_cross
 }
-
--- local card_back = love.graphics.newQuad(0, 0, 22, 32, SPRITESHEET)
--- local card_red = love.graphics.newQuad(22, 0, 22, 32, SPRITESHEET)
--- local card_blue = love.graphics.newQuad(44, 0, 22, 32, SPRITESHEET)
--- local card_green = love.graphics.newQuad(66, 0, 22, 32, SPRITESHEET)
--- local card_yellow = love.graphics.newQuad(88, 0, 22, 32, SPRITESHEET)
--- local card_skull = love.graphics.newQuad(110, 0, 22, 32, SPRITESHEET)
--- local card_cross = love.graphics.newQuad(132, 0, 22, 32, SPRITESHEET)
-
--- function generate_card_types()
---  local roll=random_float()
---  if roll<=NORMAL_CHANCE then
---   --print("normal")
---   return love.math.random(2,5)
---  elseif roll>NORMAL_CHANCE and roll<=(NORMAL_CHANCE+SKULL_CHANCE) then
---   --print("skull")
---   return 6
---  elseif roll>(NORMAL_CHANCE+SKULL_CHANCE) then
---   --print("cross")
---   return 7
---  end
--- end
 
 function Card:new(pos,spot)
  local c=setmetatable({},Card)
@@ -61,7 +35,7 @@ function Card:new(pos,spot)
  c.home_pos=pos
  c.face_img=card_types[1]
  c.position={x=120,y=-50}
- c.type=0 -- or type???
+ c.type=0
  c.is_face_down=true
  c.is_clickable=false
  c.is_on_board=true
@@ -80,7 +54,6 @@ function Card:update(dt)
 end
 
 function Card:move()
-
 end
 
 function Card:draw()
@@ -90,16 +63,12 @@ function Card:draw()
   love.graphics.rectangle("line",self.hitbox.x,self.hitbox.y,self.hitbox.w,self.hitbox.h)
   love.graphics.pop()
  end
-
  if self.is_face_down then
   love.graphics.draw(SPRITESHEET,self.face_img,self.position.x,self.position.y,0,self.sx,1,ox,oy)
- else
-
  end
 end
 
 function Card:reset()
-
 end
 
 function Card:slide_to_home_position()
@@ -118,7 +87,6 @@ function Card:set_face(c_idx)
 end
 
 function Card:remove_from_board()
- -- body
  logger.debug('removing '..tostring(self))
 end
 
@@ -126,10 +94,7 @@ function Card:show_face()
  self.is_clickable=false
  flux.to(self,FLIP_DURATION,{sx=0}):oncomplete(
   function()
-   --print(self.type)
-   --print(card_types[self.type])
    self.face_img=card_types[self.type]
-
    flux.to(self,FLIP_DURATION,{sx=1})
   end
  )
@@ -140,7 +105,6 @@ function Card:show_back()
  flux.to(self,FLIP_DURATION,{sx=0}):oncomplete(
   function()
    self.face_img=card_types[1]
-
    flux.to(self,FLIP_DURATION,{sx=1}):oncomplete(
     function()
      logger.debug(tostring(self)..' flipped back over')
@@ -211,7 +175,6 @@ function remove_skull()
  for _,c in ipairs(active_cards) do
   if c.type==6 then
    logger.debug("found a skull")
-
    Timer.script(function(wait)
     c:show_face()
     wait(0.5)
