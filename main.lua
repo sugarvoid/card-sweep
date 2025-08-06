@@ -1,3 +1,5 @@
+IS_DEBUG=false
+
 love.graphics.setDefaultFilter("nearest","nearest")
 flux=require("lib.flux")
 Timer=require "lib.timer"
@@ -35,34 +37,10 @@ graveyard={}
 DEBUG_SCALE=0.3
 
 hovered_card={}
-
 all_windlines={}
 active_cards={}
 graveyard={}
-
 card_values={7,7,6,6,6,6,2,2,2,2,3,3,3,3,4,4,4,4,5,5}
-
--- card_pos={
---  {x=58,y=65},
---  {x=88,y=65},
---  {x=118,y=65},
---  {x=148,y=65},
---  {x=178,y=65},
---  {x=58,y=105},
---  {x=88,y=105},
---  {x=118,y=105},
---  {x=148,y=105},
---  {x=178,y=105},
---  {x=58,y=145},
---  {x=88,y=145},
---  {x=118,y=145},
---  {x=148,y=145},
---  {x=178,y=145},
---  {x=58,y=185},
---  {x=88,y=185},
---  {x=118,y=185},
---  {x=148,y=185},
--- {x=178,y=185}}
 
 card_pos={}
 
@@ -82,7 +60,12 @@ end
 local mx,my
 
 function love.load()
- logger.level=logger.Level.DEBUG
+ if IS_DEBUG then
+  logger.level=logger.Level.DEBUG
+ else
+  logger.level=logger.Level.INFO
+ end
+
  math.randomseed(os.time())
  font=love.graphics.newFont("res/monogram.ttf",32)
  font:setFilter("nearest")
@@ -174,7 +157,9 @@ function love.draw()
  arm_1:draw()
  arm_2:draw()
 
- draw_debug()
+ if IS_DEBUG then
+  draw_debug()
+ end
 
  love.graphics.push("all")
  love.graphics.setColor(love.math.colorFromBytes(33,33,35))
@@ -210,18 +195,6 @@ end
 function love.keypressed(key,scancode,isrepeat)
  if key=="escape" then
   love.event.quit()
- end
- --TODO: For debug, remove later
- if key=="left" then -- move right
-  print("left")
-
-  --print(random_float())
- elseif key=="right" then
-  print("right")
- end
-
- if key=="space" then
-
  end
 end
 
